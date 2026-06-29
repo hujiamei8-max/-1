@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首业 (ShouYe) - 你的专属3D智能桌宠</title>
+    <style>
+        :root {
+            --primary-color: #ff7675;
+            --secondary-color: #74b9ff;
+            --bg-color: #f7f1e3;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            color: #2d3436;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            color: #d63031;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #636e72;
+        }
+
+        /* 3D 宠物视窗容器 */
+        .pet-container {
+            width: 350px;
+            height: 350px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            backdrop-filter: blur(10px);
+            border: 4px solid #fff;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .pet-container:hover {
+            transform: scale(1.05);
+        }
+
+        /* 互动气泡提示 */
+        .dialogue-box {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #ff7675;
+            animation: bounce 2s infinite;
+        }
+
+        /* 下载与介绍区域 */
+        .info-section {
+            text-align: center;
+            max-width: 500px;
+            padding: 0 20px;
+        </style>
+</head>
+<body>
+
+    <header>
+        <h1>🐾 首业 · ShouYe</h1>
+        <p>一只住在你桌面上的 3D 卡通萌宠</p>
+    </header>
+
+    <!-- 互动对话框 -->
+    <div class="dialogue-box" id="pet-speech">主人，戳戳我可以互动哦！</div>
+
+    <!-- 3D 宠物渲染区域 (Canvas 模拟) -->
+    <div class="pet-container" onclick="interactWithPet()">
+        <canvas id="petCanvas" width="300" height="300"></canvas>
+    </div>
+
+    <div class="info-section" style="text-align: center; margin-bottom: 50px;">
+        <h3 style="color: #2d3436; margin-bottom: 10px;">✨ 宠物技能包</h3>
+        <p style="color: #636e72; font-size: 0.95rem; line-height: 1.6;">
+            首业是一只集<b>整点报时、待办提醒、有声陪伴、摸头杀互动</b>于一身的 3D 智能动物桌宠。不仅能治愈你的打工日常，还能帮你抓好工作节奏！
+        </p>
+        
+        <button onclick="alert('感谢下载！首业正在打包向你的电脑狂奔...')" style="background: #ff7675; color: white; border: none; padding: 12px 35px; font-size: 1.1rem; border-radius: 30px; cursor: pointer; box-shadow: 0 5px 15px rgba(255,118,117,0.4); font-weight: bold; margin-top: 15px;">
+            立即下载首业 (Windows/macOS)
+        </button>
+    </div>
+
+    <!-- 3D 动画脚本逻辑 -->
+    <script>
+        const canvas = document.getElementById('petCanvas');
+        const ctx = canvas.getContext('2d');
+        let angle = 0;
+
+        // 模拟一个简单的3D卡通动物头部（使用Canvas 3D矩阵投影的简化版）
+        function drawPet() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 随时间轻微浮动
+            let bounce = Math.sin(angle) * 10;
+            let centerX = canvas.width / 2;
+            let centerY = canvas.height / 2 + bounce;
+
+            // 1. 画耳朵 (卡通动物特征)
+            ctx.fillStyle = '#e17055';
+            ctx.beginPath(); // 左耳
+            ctx.arc(centerX - 60, centerY - 60, 30, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath(); // 右耳
+            ctx.arc(centerX + 60, centerY - 60, 30, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 2. 画Q版大脑袋 (3D渐变光效)
+            let gradient = ctx.createRadialGradient(centerX - 20, centerY - 20, 10, centerX, centerY, 90);
+            gradient.addColorStop(0, '#ffeaa7');
+            gradient.addColorStop(1, '#fdcb6e');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 85, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 3. 呆萌的大眼睛 (带高光)
+            ctx.fillStyle = '#2d3436';
+            ctx.beginPath(); // 左眼
+            ctx.arc(centerX - 30, centerY - 10, 12, 0, Math.PI * 2);
+            ctx.arc(centerX + 30, centerY - 10, 12, 0, Math.PI * 2);
+            ctx.fill();
+            // 眼部高光
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(centerX - 34, centerY - 14, 4, 0, Math.PI * 2);
+            ctx.arc(centerX + 26, centerY - 14, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 4. 腮红
+            ctx.fillStyle = 'rgba(255, 118, 117, 0.6)';
+            ctx.beginPath();
+            ctx.arc(centerX - 50, centerY + 15, 15, 0, Math.PI * 2);
+            ctx.arc(centerX + 50, centerY + 15, 15, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 5. 小嘴巴
+            ctx.strokeStyle = '#2d3436';
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY + 10, 10, 0, Math.PI);
+            ctx.stroke();
+
+            angle += 0.05;
+            requestAnimationFrame(drawPet);
+        }
+
+        // 点击互动台词库
+        const quotes = [
+            "嗷呜~ 别戳啦，首业要晕倒了！🌀",
+            "今天也要加油鸭！首业在桌面上陪着你！✨",
+            "主人的鼠标好温暖呀~ 🥰",
+            "盯—— 感觉你已经看了好久屏幕了，快休息眼睛！👀",
+            "偷偷告诉你，其实我很会吃内存的（才没有）哼！😜"
+        ];
+
+        function interactWithPet() {
+            const speech = document.getElementById('pet-speech');
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            speech.innerText = randomQuote;
+        }
+
+        // 启动动画
+        drawPet();
+    </script>
+</body>
+</html>
